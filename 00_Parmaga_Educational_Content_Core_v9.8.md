@@ -1,5 +1,5 @@
 # Executive Prompt for Educational SVG Reconstruction
-## Version 9.7 — One Page Never Split, Density Levels, Hierarchy and Emphasis, Components, Icons and Faces, Code and Output Boxes, Answers Line, Page Prompt Format, Filled Free Space (consolidated from 9.0 to 9.6)
+## Version 9.8 — Drawing Groups and Labels, One Page Never Split, Density Levels, Hierarchy and Emphasis, Components, Icons and Faces, Code and Output Boxes, Answers Line, Page Prompt Format, Filled Free Space (consolidated from 9.0 to 9.6)
 
 Prepared for:
 Eng. Amr Abdelsalam
@@ -518,6 +518,22 @@ Illustrations, icons, and emotion faces make the notebook friendly and help stud
 - Draw people modestly and respectfully, suitable for Arab secondary-school students, with simple faces in #22303f.
 - Do not represent AI as a humanoid robot or a brain inside a machine unless the page prompt asks for it.
 
+### Drawing groups and labels (Mandatory)
+
+The notebook viewer reveals the page step by step and links every drawing to a text. These rules make every drawing appear whole and smoothly, before the labels that explain it.
+
+- Write every illustration as one top-level `<g>`: its shadows first, then its shapes, then its connector arrows. Never put a shadow, part, or arrow of a drawing in a separate group or outside its group.
+- Every icon and every emotion face is likewise one self-contained `<g>`.
+- The drawing extent is the bounding box of everything inside its group, including shadows and connectors. Its vertical center is the extent top plus half the extent height.
+- Every label listed for an illustration lies fully inside the drawing extent, and the top of its first line (baseline − font-size) lies at least 16 px below the drawing's vertical center.
+- Plan the scene for this: put labeled elements in the lower half of the drawing. When a labeled element must sit in the upper half, place its label in the lower half and add a §13E connector arrow from the label to the element, inside the drawing group.
+- Labels stay on paper beside their elements, at least 16 px from every shape, never over a shape.
+- The drawing group comes in the document before every text element; its labels then follow in `Layout` order.
+- Labels that share a row are read right to left: the first label in `Layout` sits at the right end of the row, the next one to its left, and so on. Plan the scene so the element of the first label is the rightmost one. A bilingual label keeps its Arabic line directly above its English line, in the same column.
+- Draw a dashed line as separate short segments in one `path`; never use `stroke-dasharray`, `stroke-dashoffset`, or `visibility`.
+- Unlabeled drawings (memory illustrations, icons, faces) need only the single-group rule.
+- On a lesson opening page (§13C), the illustration and the title panel stay two separate groups.
+
 ### Drawing palette
 
 Every drawing fill, stroke, and gradient stop must be one of these values or a value listed in §13A or §13E.
@@ -676,6 +692,7 @@ Use the component the page prompt names. When it names none, plain text on the g
 - Separators: stroke #c0392b, stroke-width 1.4. Optional zebra rows: every second body row fill #fbf6e9.
 - Column widths follow each column's longest line. Cell text stays at least 15 px from any line. Row height = number of lines × H + 20.
 - Semantic color in cells: type names bold #2e7d32; examples #c96a1b; Arabic explanations #225f9c; English #152b42.
+- Draw each table as one <g>: separators as a single multi-segment <path>, header background as one <path>, never standalone <line> elements.
 
 ### Lists and bullets
 
@@ -1016,7 +1033,7 @@ Draw the desk, paper, notebook lines, and outer border only by copying the §13A
 ## 27. Layer Order
 
 1. The §13A base layer.
-2. Shadows of cards, strips, tables, and drawings.
+2. Shadows of cards, strips, and tables. A drawing's shadow is drawn inside that drawing's own group (§13B), never here.
 3. Card, strip, and table fills.
 4. Functional lines, separators, and arrows.
 5. Illustrations, icons, and faces.
@@ -1046,6 +1063,7 @@ Do not use:
 - JavaScript, external CSS, external images, Base64 images, or internet fonts.
 - `foreignObject`, automatic text wrapping, `overflow:hidden`, or `text-overflow:ellipsis`.
 - `filter`, `mask`, `clipPath`, `use`, `symbol`, `image`, or `marker`.
+- `stroke-dasharray`, `stroke-dashoffset`, or `visibility` on any element.
 - `transform` on text, `textLength`, horizontal shrinking, or negative `letter-spacing`.
 - Elements outside the viewBox, duplicate IDs, or references to missing IDs.
 - A text baseline below y=1250 or a content shape below y=1266.
@@ -1191,6 +1209,7 @@ Answer “Yes” only to checks you actually performed. If a check needs renderi
 28. Were code and output built with the §13E code and output boxes, every line exact, with its leading spaces?
 29. Were answers handled exactly as the `Answers` line says (§23)?
 30. Is every free band filled as in §13B, with no empty frame, box, placeholder, or large blank area?
+31. Is every drawing one `<g>` containing its shadows and connectors, and does every label of an illustration lie inside its extent, at least 16 px below its vertical center, with labels in one row ordered right to left in `Layout` order (§13B)?
 
 If any answer is “No,” correct the file before delivery.
 
